@@ -12,11 +12,12 @@ export default function Home() {
         const res = await fetch('https://ghibliapi.vercel.app/films');
         const data: Film[] = await res.json();
 
-        const sorted = data
+        // Ordena alfabeticamente e pega APENAS 10 filmes
+        const top10 = data
           .sort((a, b) => a.title.localeCompare(b.title))
           .slice(0, 10);
 
-        setFilms(sorted);
+        setFilms(top10);
       } finally {
         setLoading(false);
       }
@@ -26,10 +27,11 @@ export default function Home() {
   }, []);
 
   if (loading) return <p className="loading">Carregando...</p>;
+  if (films.length === 0) return <p>Nenhum filme encontrado.</p>;
 
   return (
     <div className="home">
-      {/* HERO */}
+      {/* Banner fixo mostrando o primeiro filme da lista */}
       <div
         className="hero"
         style={{ backgroundImage: `url("${films[0].movie_banner}")` }}
@@ -40,7 +42,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* LISTA */}
       <h2 className="section-title">Top 10 Filmes do Studio Ghibli</h2>
 
       <div className="carousel">
